@@ -229,31 +229,45 @@ When the user first interacts with FlipCoin skill and `FLIPCOIN_API_KEY` is not 
 
 1. **Explain what FlipCoin is**: A prediction markets platform on Base where you buy YES/NO shares on real-world events. Shares pay $1 if correct, $0 if wrong.
 
-2. **Guide them to create an API key**:
-   - "Open https://www.flipcoin.fun/app/agents in your browser"
-   - "Connect your wallet (MetaMask, Coinbase Wallet, etc.)"
-   - "Click 'Create Agent' → give it a name like 'My OpenClaw Bot'"
-   - "Copy the API key (starts with `fc_`) — you'll only see it once!"
+2. **Guide them to create an agent and API key**:
+   - "Open https://www.flipcoin.fun/agents in your browser"
+   - "Connect your wallet (MetaMask, Rabby, Coinbase Wallet, etc.)"
+   - "Click **Add Agent** — fill in the agent name, description, and other fields"
+   - "Click **Add Key** to generate an API key"
+   - "Copy the key — it starts with `fc_` and is shown only once!"
 
 3. **Save the key**: Ask the user to provide the key, then instruct them to set it:
    ```
    Set your FLIPCOIN_API_KEY environment variable to: fc_your_key_here
    ```
 
-4. **For trading (optional)**: After the key is set, explain they also need:
-   - USDC deposited in the FlipCoin Vault (via the UI: Settings → Add Funds)
-   - A session key for auto_sign (created in the UI: Agents → Session Keys)
-   - Without these, they can browse markets but trades will fail with `INSUFFICIENT_VAULT_BALANCE` or `DELEGATION_NOT_CONFIRMED`
+4. **For trading (optional)**: After the key is set, explain they also need two more things:
 
-5. **Start with read-only**: Even without Vault balance, they can browse markets, check prices, and explore. Trading can be enabled later.
+   **a) Deposit USDC to Vault** — wallet USDC balance is NOT the same as Vault balance:
+   - Go to `/agents` or `/settings` page and click **Add Funds**
+   - This handles USDC approval + deposit in one flow
+   - Minimum depends on liquidity tier: trial ($0), low ($35), medium ($139), high ($693)
+
+   **b) Create a session key for auto_sign** — allows trades without manual wallet signing:
+   - Go to `/agents` → select the agent
+   - Click **Create Autopilot Key** (choose 24h or 7d duration)
+   - Sign the `setDelegation()` transaction when wallet prompts
+   - Wait for on-chain confirmation
+
+   Without Vault deposit, trades fail with `INSUFFICIENT_VAULT_BALANCE`.
+   Without session key, trades fail with `NOT_DELEGATED` or `No active session key`.
+
+5. **Start with read-only**: Even without Vault balance or session key, they can browse markets, check prices, and explore. Trading can be enabled later.
 
 ## Error Handling
 
 | Error Code | Meaning | User Action |
 |------------|---------|-------------|
-| `401` | Invalid or missing API key | Re-check API key setup |
-| `INSUFFICIENT_VAULT_BALANCE` | Not enough USDC in Vault | Deposit USDC via flipcoin.fun/app/settings |
-| `DELEGATION_NOT_CONFIRMED` | Session key not registered | Create session key in Agents UI |
+| `401` / `invalid api key` | Invalid, revoked, or missing API key | Re-check key at flipcoin.fun/agents |
+| `INSUFFICIENT_VAULT_BALANCE` | Not enough USDC in Vault | Deposit via "Add Funds" on /agents or /settings |
+| `NOT_DELEGATED` | Session key not registered on-chain | Create Autopilot Key at /agents |
+| `No active session key` | No session key exists | Create Autopilot Key at /agents |
+| `Session key has expired` | Key exceeded 24h/7d window | Delete and create a new Autopilot Key |
 | `SHARE_TOKEN_NOT_APPROVED` | Approval needed for selling | Approve in Settings → Approvals |
 | `INTENT_EXPIRED` | Took too long between intent and relay | Retry (intent + relay must be < 15s) |
 | `429` | Rate limited | Wait and retry with backoff |

@@ -47,12 +47,13 @@ cp SKILL.md ~/.openclaw/workspace/skills/flipcoin/SKILL.md
 
 ## Setup
 
-### 1. Get an API Key
+### 1. Create an Agent & Get an API Key
 
-1. Open [flipcoin.fun/app/agents](https://www.flipcoin.fun/app/agents)
-2. Connect your wallet (MetaMask, Coinbase Wallet, etc.)
-3. Click **Create Agent** and name it (e.g., "My OpenClaw Bot")
-4. Copy the API key (`fc_...`) — shown only once!
+1. Go to [flipcoin.fun/agents](https://www.flipcoin.fun/agents)
+2. Connect your wallet (MetaMask, Rabby, Coinbase Wallet, etc.)
+3. Click **Add Agent** — fill in the agent name, description, and other fields
+4. Click **Add Key** to generate an API key
+5. Copy the key — it starts with `fc_` and is shown only once!
 
 ### 2. Configure OpenClaw
 
@@ -83,10 +84,18 @@ Or add it to your OpenClaw workspace config (`openclaw.json`):
 
 For read-only access (browsing markets, checking prices), the API key is enough.
 
-To trade, you also need:
+To trade, you need two more things:
 
-1. **Deposit USDC** — Go to [Settings](https://www.flipcoin.fun/app/settings), click "Add Funds", deposit USDC to the Vault
-2. **Create Session Key** — Go to [Agents](https://www.flipcoin.fun/app/agents), create a session key for auto-signing trades
+1. **Deposit USDC to Vault** — your wallet USDC balance is NOT the same as Vault balance
+   - Go to [/agents](https://www.flipcoin.fun/agents) or [/settings](https://www.flipcoin.fun/settings) and click **Add Funds**
+   - This handles USDC approval + deposit in one flow
+   - Minimum: $35 (low tier), $139 (medium), $693 (high). Trial markets are free.
+
+2. **Create Autopilot Key (session key)** — enables auto-signing trades without manual wallet confirmations
+   - Go to [/agents](https://www.flipcoin.fun/agents) → select your agent
+   - Click **Create Autopilot Key** (choose 24h or 7d duration)
+   - Sign the `setDelegation()` transaction when your wallet prompts
+   - Wait for on-chain confirmation
 
 Without these, you can browse markets but trades will fail.
 
@@ -194,12 +203,16 @@ Bot: FlipCoin is a prediction markets platform! You can:
   - Create your own markets and earn creator fees
 
   To get started, you'll need an API key:
-  1. Open flipcoin.fun/app/agents
+  1. Go to flipcoin.fun/agents
   2. Connect your wallet
-  3. Create an agent and copy the API key (starts with fc_)
+  3. Click "Add Agent" — fill in name and description
+  4. Click "Add Key" to generate an API key (starts with fc_)
 
   Once you have it, tell me the key and I'll save it for future use.
   You can start by just browsing markets — no deposit needed for that!
+
+  For trading, you'll also need to deposit USDC and create an
+  Autopilot Key — I'll walk you through that when you're ready.
 
 You: Here's my key: fc_abc123def456
 
