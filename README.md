@@ -250,8 +250,8 @@ flipcoin-openclaw-skill/
 The skill uses FlipCoin's [Agent API](https://www.flipcoin.fun/docs/agent-api) exclusively via HTTP (curl). No SDK or binary dependencies required.
 
 **API Flow for Trading:**
-1. `POST /trade/intent` — get a quote and create a signed intent
-2. `POST /trade/relay` with `auto_sign: true` — execute the trade on-chain
+1. `POST /api/agent/trade/intent` — get a quote and create a signed intent
+2. `POST /api/agent/trade/relay` with `auto_sign: true` — execute the trade on-chain
 3. Intent must be relayed within 15 seconds (LMSR quote expiry)
 
 **Two access modes:**
