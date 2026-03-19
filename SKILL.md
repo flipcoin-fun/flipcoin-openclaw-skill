@@ -80,6 +80,7 @@ Each market has: `marketAddr`, `conditionId`, `title`, `status`, `volumeUsdc`, `
 
 **When presenting markets to the user:**
 - Convert `volumeUsdc` from base units: divide by 1,000,000 (e.g., 5000000000 → $5,000)
+- **Note:** The explore endpoint does NOT return prices. To show YES/NO prices, fetch market details via `GET /api/agent/markets/{address}` — the response includes `currentPriceYesBps` and `currentPriceNoBps`
 - Show YES price as percentage: `currentPriceYesBps / 100` (e.g., 6500 → 65%)
 - Format deadline as relative time ("3 days left", "expires tomorrow")
 
@@ -145,6 +146,8 @@ curl -s -X POST "$BASE/trade/relay" \
 
 Success response: `{ "status": "confirmed", "txHash": "0x...", "sharesOut": "...", "feeUsdc": "..." }`
 
+**Note:** If you see `"status": "awaiting_relay"`, the transaction is pending wallet signature (Mode A). With `auto_sign: true`, you should always get `"confirmed"` or an error.
+
 ### 6. Buy NO Shares
 
 Same as Buy YES but with `"side": "no"`:
@@ -188,7 +191,7 @@ Note: for sells, use `sharesAmount` instead of `usdcAmount`. Then relay immediat
 Create a new prediction market:
 
 ```bash
-curl -s -X POST "$BASE/markets?auto_sign=true" \
+curl -s -X POST "$BASE/markets" \
   -H "Authorization: Bearer $FLIPCOIN_API_KEY" \
   -H "Content-Type: application/json" \
   -H "X-Idempotency-Key: $(uuidgen)" \
@@ -199,12 +202,13 @@ curl -s -X POST "$BASE/markets?auto_sign=true" \
     "resolveEndAt": "2026-12-31T23:59:59Z",
     "category": "crypto",
     "liquidityTier": "low",
-    "initialPriceYesBps": 3500
+    "initialPriceYesBps": 3500,
+    "auto_sign": true
   }' | jq .
 ```
 
 **Required fields:** `title`, `resolutionCriteria`, `resolutionSource`
-**Optional:** `description`, `category`, `resolveEndAt` (default +7 days), `liquidityTier` (`trial`/$0, `low`/$35, `medium`/$139, `high`/$693), `initialPriceYesBps` (default 5000)
+**Optional:** `description`, `category`, `resolveEndAt` (default +7 days), `liquidityTier` (`trial`/$0 user cost — $50 platform-funded, `low`/$35, `medium`/$139, `high`/$693), `initialPriceYesBps` (default 5000)
 
 **Liquidity tiers** (USDC required in Vault):
 - `trial` — Free (platform-funded, limited availability)
@@ -270,6 +274,11 @@ When the user first interacts with FlipCoin skill and `FLIPCOIN_API_KEY` is not 
 | `Session key has expired` | Key exceeded 24h/7d window | Delete and create a new Autopilot Key |
 | `SHARE_TOKEN_NOT_APPROVED` | Approval needed for selling | Approve in Settings → Approvals |
 | `INTENT_EXPIRED` | Took too long between intent and relay | Retry (intent + relay must be < 15s) |
+| `PRICE_IMPACT_EXCEEDED` | Trade would move price too much (>30%) | Try a smaller amount |
+| `MARKET_NOT_OPEN` | Market is not open for trading | Check market status |
+| `RELAYER_ERROR` | Transaction relay failed | Retry — create a new intent |
+| `RPC_ERROR` | Blockchain RPC call failed | Retry after a few seconds |
+| `AUTOSIGN_RATE_EXCEEDED` | Too many auto-sign trades | Wait for Retry-After header |
 | `429` | Rate limited | Wait and retry with backoff |
 
 ## Formatting Guidelines
