@@ -248,7 +248,7 @@ When the user first interacts with FlipCoin skill and `FLIPCOIN_API_KEY` is not 
 4. **For trading (optional)**: After the key is set, explain they also need two more things:
 
    **a) Deposit USDC to Vault** — wallet USDC balance is NOT the same as Vault balance:
-   - Go to `/agents` or `/settings` page and click **Add Funds**
+   - Go to `/agents` or `/app/settings` page and click **Add Funds**
    - This handles USDC approval + deposit in one flow
    - Minimum depends on liquidity tier: trial ($0), low ($35), medium ($139), high ($693)
 
@@ -268,7 +268,7 @@ When the user first interacts with FlipCoin skill and `FLIPCOIN_API_KEY` is not 
 | Error Code | Meaning | User Action |
 |------------|---------|-------------|
 | `401` / `invalid api key` | Invalid, revoked, or missing API key | Re-check key at flipcoin.fun/agents |
-| `INSUFFICIENT_VAULT_BALANCE` | Not enough USDC in Vault | Deposit via "Add Funds" on /agents or /settings |
+| `INSUFFICIENT_VAULT_BALANCE` | Not enough USDC in Vault | Deposit via "Add Funds" on /agents or /app/settings |
 | `NOT_DELEGATED` | Session key not registered on-chain | Create Autopilot Key at /agents |
 | `No active session key` | No session key exists | Create Autopilot Key at /agents |
 | `Session key has expired` | Key exceeded 24h/7d window | Delete and create a new Autopilot Key |
