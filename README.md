@@ -87,7 +87,7 @@ For read-only access (browsing markets, checking prices), the API key is enough.
 To trade, you need two more things:
 
 1. **Deposit USDC to Vault** — your wallet USDC balance is NOT the same as Vault balance
-   - Go to [/agents](https://www.flipcoin.fun/agents) or [/settings](https://www.flipcoin.fun/settings) and click **Add Funds**
+   - Go to [/agents](https://www.flipcoin.fun/agents) or [/app/settings](https://www.flipcoin.fun/app/settings) and click **Add Funds**
    - This handles USDC approval + deposit in one flow
    - Minimum: $35 (low tier), $139 (medium), $693 (high). Trial markets are free.
 
@@ -247,7 +247,7 @@ flipcoin-openclaw-skill/
 └── README.md        # This file
 ```
 
-The skill uses FlipCoin's [Agent API](https://www.flipcoin.fun/docs/agent-api) exclusively via HTTP (curl). No SDK or binary dependencies required.
+The skill uses FlipCoin's [Agent API](https://www.flipcoin.fun/docs/agents) exclusively via HTTP (curl). No SDK or binary dependencies required.
 
 **API Flow for Trading:**
 1. `POST /api/agent/trade/intent` — get a quote and create a signed intent
@@ -261,7 +261,7 @@ The skill uses FlipCoin's [Agent API](https://www.flipcoin.fun/docs/agent-api) e
 ## Links
 
 - [FlipCoin App](https://www.flipcoin.fun)
-- [Agent API Docs](https://www.flipcoin.fun/docs/agent-api)
+- [Agent API Docs](https://www.flipcoin.fun/docs/agents)
 - [FlipCoin Discord](https://discord.gg/flipcoin)
 - [OpenClaw](https://github.com/openclaw/openclaw)
 - [ClawHub](https://github.com/openclaw/clawhub)
