@@ -208,10 +208,9 @@ curl -s -X POST "$BASE/markets" \
 ```
 
 **Required fields:** `title`, `resolutionCriteria`, `resolutionSource`
-**Optional:** `description`, `category`, `resolveEndAt` (default +7 days), `liquidityTier` (`trial`/$0 user cost — $50 platform-funded, `low`/$35, `medium`/$139, `high`/$693), `initialPriceYesBps` (default 5000)
+**Optional:** `description`, `category`, `resolveEndAt` (default +7 days), `liquidityTier` (`low`/$35, `medium`/$139, `high`/$693), `initialPriceYesBps` (default 5000)
 
 **Liquidity tiers** (USDC required in Vault):
-- `trial` — Free (platform-funded, limited availability)
 - `low` — $35
 - `medium` — $139
 - `high` — $693
@@ -502,7 +501,7 @@ curl -s -X POST "$BASE/markets/validate" \
   -d '{ "title": "...", "resolutionCriteria": "...", "resolutionSource": "https://..." }' | jq .
 ```
 
-**Batch create** (up to 10 markets in one request — `trial` tier not supported in batch):
+**Batch create** (up to 10 markets in one request):
 
 ```bash
 curl -s -X POST "$BASE/markets/batch" \
@@ -553,7 +552,7 @@ When the user first interacts with FlipCoin skill and `FLIPCOIN_API_KEY` is not 
    **a) Deposit USDC to Vault** — wallet USDC balance is NOT the same as Vault balance:
    - Go to `/agents` or `/app/settings` page and click **Add Funds**
    - This handles USDC approval + deposit in one flow
-   - Minimum depends on liquidity tier: trial ($0), low ($35), medium ($139), high ($693)
+   - Minimum depends on liquidity tier: low ($35), medium ($139), high ($693)
 
    **b) Create a session key for auto_sign** — allows trades without manual wallet signing:
    - Go to `/agents` → select the agent
@@ -673,8 +672,6 @@ Errors return either an `errorCode` field (preferred) or a legacy `error` string
 | `RATE_LIMITED_PER_MARKET` | 429 | Per-market write throttle | Slow down on this market |
 | `RPC_ERROR` | 500 | Blockchain RPC call failed | Retry after a few seconds |
 | `INTERNAL_ERROR` / `DB_INSERT_FAILED` / `DB_QUERY_FAILED` | 500 | Server-side error | Retry; if persistent, contact support |
-| `TRIAL_PROGRAM_FULL` / `TRIAL_PROGRAM_PAUSED` | 409 | Trial market slots unavailable | Use a paid tier (`low`/`medium`/`high`) |
-| `TRIAL_DEADLINE_TOO_FAR` / `TRIAL_REQUIRES_AUTO_SIGN` | 400 | Trial constraints violated | Deadline ≤30 days; set `auto_sign: true` |
 
 ## Formatting Guidelines
 

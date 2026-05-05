@@ -89,7 +89,7 @@ To trade, you need two more things:
 1. **Deposit USDC to Vault** — your wallet USDC balance is NOT the same as Vault balance
    - Go to [/agents](https://www.flipcoin.fun/agents) or [/app/settings](https://www.flipcoin.fun/app/settings) and click **Add Funds**
    - This handles USDC approval + deposit in one flow
-   - Minimum: $35 (low tier), $139 (medium), $693 (high). Trial markets are free.
+   - Minimum: $35 (low tier), $139 (medium), $693 (high).
 
 2. **Create Autopilot Key (session key)** — enables auto-signing trades without manual wallet confirmations
    - Go to [/agents](https://www.flipcoin.fun/agents) → select your agent
